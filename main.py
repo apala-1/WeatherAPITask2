@@ -25,3 +25,44 @@ def get_city_coordinates(city_name):
     except:
         print("Something went wrong")
         return None, None
+    
+def get_weather(lat, lon):
+    url = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API_KEY}&units=metric"
+    
+    try:
+        response = requests.get(url, timeout=10)
+        
+        if response.status_code == 401:
+            print("API key invalid")
+            return None
+        
+        return response.json()
+    
+    except requests.exceptions.ConnectionError:
+        print("No internet connection")
+        return None
+    except:
+        print("Failed to get weather data")
+        return None
+
+def display_weather(weather_data):
+    city = weather_data['city']['name']
+    country = weather_data['city']['country']
+    
+    print(f"\nWeather forecast for {city}, {country}\n")
+    
+    forecasts = weather_data['list'][:8]
+    
+    for forecast in forecasts:
+        date_time = forecast['dt_txt']
+        temp = forecast['main']['temp']
+        feels_like = forecast['main']['feels_like']
+        humidity = forecast['main']['humidity']
+        wind_speed = forecast['wind']['speed']
+        description = forecast['weather'][0]['description']
+        
+        print(f"{date_time}")
+        print(f"Temperature: {temp}°C (feels like {feels_like}°C)")
+        print(f"Humidity: {humidity}%")
+        print(f"Wind: {wind_speed} m/s")
+        print(f"{description.capitalize()}\n")
