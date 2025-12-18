@@ -66,3 +66,28 @@ def display_weather(weather_data):
         print(f"Humidity: {humidity}%")
         print(f"Wind: {wind_speed} m/s")
         print(f"{description.capitalize()}\n")
+
+def main():
+    print("Weather Forecast App")
+    
+    city = input("\nEnter city name: ").strip()
+    
+    if not city:
+        print("Please enter a city name")
+        return
+    
+    print(f"Getting weather for {city}...")
+    lat, lon = get_city_coordinates(city)
+    
+    if lat is None:
+        return
+    
+    weather_data = get_weather(lat, lon)
+    
+    if weather_data is None:
+        return
+    
+    display_weather(weather_data)
+
+if __name__ == "__main__":
+    main()
